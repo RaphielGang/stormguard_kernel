@@ -60,6 +60,7 @@ CONFIG_AUDIT_TREE=y
 # Stormguard Config
 #
 CONFIG_BOEFFLA_WL_BLOCKER=y
+CONFIG_SOUND_CONTROL=y
 
 #
 # IRQ subsystem
