@@ -5,20 +5,19 @@ os:
 
 before_install:
   - sudo apt-get update -y
-  - sudo apt-get install bison build-essential curl flex git git-core gnupg flex bison gperf zip curl libc6-dev
+  - sudo apt-get install bison build-essential curl flex git git-core gnupg flex bison zip
   - sudo apt-get install -y ccache &&echo 'export PATH="/usr/lib/ccache:$PATH"' | tee -a ~/.bashrc &&source ~/.bashrc && echo $PATH
   - export USE_CCACHE=1
 
 before_script:
 # Download the toolchain
-  - git clone -q -b SDK26  https://github.com/techdro-id/aarch64-linux-android $HOME/kernel/toolchain/SDK26
-
+  - git clone https://github.com/techdro-id/aarch64-linux-android -b SDK26 $HOME/kernel/toolchain/SDK26
 # Download the Kernel Sources
-  - git clone -q -b CAF/AOSP-LOS https://github.com/techdro-id/stormguard_mido_msm8953 $HOME/kernel/mido
+  - git clone https://github.com/techdro-id/stormguard_mido_msm8953 -b CAF/AOSP-LOS $HOME/kernel/mido
 
-  - git clone -q -b mido  https://github.com/techdro-id/AnyKernel2 $HOME/kernel/anykernel/mido
+  - git clone https://github.com/techdro-id/AnyKernel2 -b mido $HOME/kernel/anykernel/mido
 
-  - git clone -q https://github.com/techdro-id/zip.git $HOME/kernel/files/mido
+  - git clone https://github.com/techdro-id/zip.git $HOME/kernel/files/mido
 
 script:
   - export ARCH=arm64

@@ -93,7 +93,7 @@ cd -;
 
 if [ -f "$FINAL_ZIP" ];
 then
-echo -e "$ZIPNAME zip can be found at $FINAL_ZIP";
+echo -e "$ZIPNAME\nzip can be found at $FINAL_ZIP";
 echo "===================================================================";
 else
 echo -e "Zip Creation Failed =(";
