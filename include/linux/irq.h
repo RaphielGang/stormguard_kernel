@@ -864,11 +864,6 @@ static inline void irq_reg_writel(struct irq_chip_generic *gc,
 
 #define irq_gc_unlock_irqrestore(gc, flags)	\
 	raw_spin_unlock_irqrestore(&(gc)->lock, flags)
-
-static inline void irq_reg_writel(struct irq_chip_generic *gc,
-				  u32 val, int reg_offset)
-{
-	writel(val, gc->reg_base + reg_offset);
 }
 
 static inline u32 irq_reg_readl(struct irq_chip_generic *gc,
