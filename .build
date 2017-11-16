@@ -52,8 +52,6 @@ export ZIPNAME="${NAME}-${VERSION}-$(date +%Y%m%d-%H%M)-${DEVICE}.zip"
 # export LOCALVERSION="${TCVERSION1}.${TCVERSION2}"
 export FINAL_ZIP="${ZIP_DIR}/${ZIPNAME}"
 
-rm -rfv out;
-
 [ ! -d "${ZIP_DIR}" ] && mkdir -pv ${ZIP_DIR}
 [ ! -d "${OUTDIR}" ] && mkdir -pv ${OUTDIR}
 
@@ -93,25 +91,8 @@ cd -;
 
 if [ -f "$FINAL_ZIP" ];
 then
-echo -e "$ZIPNAME\nzip can be found at $FINAL_ZIP";
-echo "=============================================";
-git config --global user.name "Adek Maulana"
-git config --global user.email "adek@techdro.id"
-cd ${ZIP_DIR};
-
-export UPLOAD="${ZIP_DIR}/AOSP_LOS";
-export UPLOAD_ZIP="${UPLOAD}/$ZIPNAME";
-
-mkdir -p AOSP_LOS;
-
-cp $ZIPNAME ${UPLOAD};
-
-git add -f $UPLOAD_ZIP
-git remote rm origin
-git remote add origin https://adekmaulana:$GITHUB_API_KEY@github.com/techdro-id/zip.git
-git commit -m "Stormguard: Travis CI Build #$TRAVIS_BUILD_NUMBER"
-git push -fq origin master
-
+echo -e "$ZIPNAME zip can be found at $FINAL_ZIP";
+echo "===================================================================";
 else
 echo -e "Zip Creation Failed =(";
 fi # FINAL_ZIP check
