@@ -99,12 +99,12 @@ git config --global user.name "Adek Maulana"
 git config --global user.email "adek@techdro.id"
 cd ${ZIP_DIR};
 
-export UPLOAD="${FINAL_ZIP}/AOSP_LOS";
+export UPLOAD="${ZIP_DIR}/AOSP_LOS";
 export UPLOAD_ZIP="${UPLOAD}/$ZIPNAME";
 
 mkdir -p AOSP_LOS;
 
-cp $FINAL_ZIP ${UPLOAD};
+cp $ZIPNAME ${UPLOAD};
 
 git add -f $UPLOAD_ZIP
 git remote rm origin
