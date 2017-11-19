@@ -31,6 +31,8 @@ export DEFCONFIG="${DEVICE}_defconfig";
 export ZIP_DIR="${KERNELDIR}/files/${DEVICE}";
 export IMAGE="${OUTDIR}/arch/${ARCH}/boot/Image.gz-dtb";
 export VERSION="2.7";
+export KBUILD_BUILD_USER="adek";
+export KBUILD_BUILD_HOST="ProjectBish-Bot";
 
 export MAKE="make O=${OUTDIR}";
 
