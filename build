@@ -30,7 +30,7 @@ export TOOLCHAIN="${KERNELDIR}/toolchain/SDK26";
 export DEFCONFIG="${DEVICE}_defconfig";
 export ZIP_DIR="${KERNELDIR}/files/${DEVICE}";
 export IMAGE="${OUTDIR}/arch/${ARCH}/boot/Image.gz-dtb";
-export VERSION="2.7";
+export VERSION="2.8";
 export KBUILD_BUILD_USER="adek";
 export KBUILD_BUILD_HOST="ProjectBish-Bot";
 
