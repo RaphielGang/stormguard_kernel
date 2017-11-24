@@ -30,7 +30,7 @@ export TOOLCHAIN="${KERNELDIR}/toolchain/SDK26";
 export DEFCONFIG="${DEVICE}_defconfig";
 export ZIP_DIR="${KERNELDIR}/files/${DEVICE}";
 export IMAGE="${OUTDIR}/arch/${ARCH}/boot/Image.gz-dtb";
-export VERSION="2.8";
+export VERSION="2.9";
 
 export MAKE="make O=${OUTDIR}";
 
@@ -49,7 +49,7 @@ if [[ -z "${NAME}" ]]; then
 fi
 
 export ZIPNAME="${NAME}-${VERSION}-$(date +%Y%m%d-%H%M)-${DEVICE}.zip"
-# export LOCALVERSION="${TCVERSION1}.${TCVERSION2}"
+export LOCALVERSION="-AOSP.LOS"
 export FINAL_ZIP="${ZIP_DIR}/${ZIPNAME}"
 
 [ ! -d "${ZIP_DIR}" ] && mkdir -pv ${ZIP_DIR}
