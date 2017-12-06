@@ -11,7 +11,10 @@ before_install:
 
 before_script:
 # Download the toolchain
-  - git clone https://github.com/techdro-id/aarch64-linux-android -b SDK26 $HOME/kernel/toolchain/SDK26
+  - git clone https://github.com/techdro-id/aarch64-linux-android -b SDK27 $HOME/kernel/toolchain/SDK27
+
+  - git clone https://github.com/techdro-id/build_scripts.git $HOME/kernel/compiled
+
 # Download the Kernel Sources
   - git clone https://github.com/techdro-id/stormguard_mido_msm8953 -b CAF/AOSP-LOS $HOME/kernel/mido
 
@@ -21,9 +24,10 @@ before_script:
 
 script:
   - export ARCH=arm64
-  - export KERNELDIR=$HOME/kernel/mido
+  - mkdir -p $HOME/kernel/compiled/AOSP_LOS
+  - export KERNELDIR=$HOME/kernel
   - cd $KERNELDIR
-  - ./build
+  - bash compiled/build_custom
 
 notifications:
   email:
