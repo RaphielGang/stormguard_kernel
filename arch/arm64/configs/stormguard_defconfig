@@ -59,7 +59,7 @@ CONFIG_AUDIT_TREE=y
 #
 # Stormguard Configs
 #
-
+CONFIG_ADRENO_IDLER=y
 
 #
 # IRQ subsystem
