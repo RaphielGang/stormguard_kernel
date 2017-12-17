@@ -24,7 +24,7 @@ KERNELDIR="${HOME}/kernel/stormguard"
 # These won't change
 export SRCDIR="${HOME}/kernel";
 export OUTDIR="${KERNELDIR}/out";
-export ANYKERNEL="${SRCDIR}/anykernel/zImage";
+export ANYKERNEL="${SRCDIR}/anykernel/miui";
 export ARCH="arm64";
 export SUBARCH="arm64";
 export TOOLCHAIN="${SRCDIR}/toolchain/snapshot";
@@ -38,14 +38,12 @@ export DB2="arch/arm64/boot/dts/qcom/msm8952-cdp.dtb";
 export DB3="arch/arm64/boot/dts/qcom/msm8952-ext-codec-cdp.dtb";
 export DB4="arch/arm64/boot/dts/qcom/msm8952-mtp.dtb";
 export MODULEDIR="${OUTDIR}/modules";
-export VERSION="3.0";
-export KBUILD_BUILD_USER="adek";
-export KBUILD_BUILD_HOST="ProjectBish-Bot";
+export VERSION="3.1";
 
 export MAKE="make";
 
 if [[ -z "${JOBS}" ]]; then
-    export JOBS="$(nproc --all)";
+    export JOBS="$(grep -c '^processor' /proc/cpuinfo)";
 fi
 
 check_toolchain;
@@ -62,14 +60,26 @@ export ZIPNAME="${NAME}-${VERSION}-$(date +%Y%m%d-%H%M)-${DEVICE}.zip"
 export LOCALVERSION="-MIUI"
 export FINAL_ZIP="${ZIP_DIR}/${ZIPNAME}"
 
-rm -rfv out;
+if [ -f "${ZIMAGE}" ];
+then
+rm -f ${ZIMAGE};
+rm -rf ${MODULEDIR};
+echo -e "Old build deleted";
+else
+echo -e "Nothing has been made";
+fi
 
 [ ! -d "${ANYKERNEL}" ] && mkdir -pv ${ANYKERNEL}
 [ ! -d "${ZIP_DIR}" ] && mkdir -pv ${ZIP_DIR}
-[ ! -d "${OUTDIR}" ] && mkdir -pv ${OUTDIR}
 [ ! -d "${MODULEDIR}" ] && mkdir -pv ${MODULEDIR}/pronto
 
-rm -fv ${IMAGE};
+if [ -f "${IMAGE}" ];
+then
+rm -f ${IMAGE};
+echo -e "Old image deleted";
+else
+echo -e "Nothing has been made";
+fi
 
 if [[ "$@" =~ "mrproper" ]]; then
     ${MAKE} mrproper
@@ -104,67 +114,67 @@ MODULES="${MODULEDIR}/wlan.ko";
 PRONTO="${MODULEDIR}/pronto/pronto_wlan.ko";
 ZIMAGE="${OUTDIR}/zImage";
 
-echo -e "gen-zImage";
+if [ -f "${IMAGE}" ];
+then
+echo -e "Converting Image.gz-dtb to zImage";
+sleep 2;
+echo -e "Combining database";
+sleep 1;
 cat $DB0 $DB1 $DB2 $DB3 $DB4 > $DB;
-echo -e "Database Combined & now making zImage";
+echo -e "Puting database into Image"
+sleep 3;
 cat ${IMAGE} $DB > ${ZIMAGE};
+echo -e "zImage creation success";
+else
+echo -e "Nothing has been made";
+exit 1;
+fi
 
+if [ -f "${MODULE}" ];
+then
 echo -e "Signing Module";
 $sign sha512 $KEY1 $KEY0 $MODULE;
 cp $MODULE ${MODULEDIR};
 cp -ar $MODULES ${PRONTO};
+sleep 4;
+else
+echo -e "no module found, did you on a right branch?";
+exit 1;
+fi
 
+if [ -f "${PRONTO}" ];
+then
 echo -e "Copying Modules"
 cp -R ${MODULEDIR} ${ANYKERNEL};
+sleep 4;
+else
+echo -e "Copying modules failed, No such file or directory";
+exit 1;
+fi
 
-echo -e "Copying zImage";
+if [ -f "${ZIMAGE}" ];
+then
+echo -e "Copying zImage into AnyKernel";
 cp ${ZIMAGE} ${ANYKERNEL};
+sleep 3;
+else
+echo -e "Nothing has been made";
+exit 1;
+fi
 
 echo -e "Moving to AnyKernel";
 cd ${ANYKERNEL};
+git checkout miui_oc;
+sleep 2;
+echo -e "Creating FINAL ZIP";
 zip -r9 ${FINAL_ZIP} *;
+sleep 2;
 cd -;
+
 if [ -f "$FINAL_ZIP" ];
 then
 echo -e "$ZIPNAME\nzip can be found at $FINAL_ZIP";
-
-git config --global user.name "Adek Maulana"
-git config --global user.email "adekm@techdro.id"
-
-cd ${ZIP_DIR};
-
-export UPLOAD="${ZIP_DIR}/MIUI";
-export UPLOAD_ZIP="${UPLOAD}/$ZIPNAME";
-
-mkdir -p MIUI;
-
-mv $ZIPNAME ${UPLOAD};
-
-git add $UPLOAD_ZIP
-
-echo -e "Wait before pushing...";
-
-git remote rm origin
-git remote add origin https://adekmaulana:$GITHUB_API_KEY@github.com/techdro-id/zip.git
-
-git fetch origin master
-git pull origin master
-
-git add .
-
-echo -e "Initialize pushing now...";
-
-git commit -m "Stormguard: Travis CI Build #$TRAVIS_BUILD_NUMBER-MIUI Stormguard-3.0 ${DEVICE}"
-
-echo -e "...";
-
-git push -u origin master
-
-echo -e "Pushed...";
-
-git status
-
-echo -e "Pushed succeed";
+sleep 3;
 else
 echo -e "Zip Creation Failed =(";
 fi # FINAL_ZIP check
