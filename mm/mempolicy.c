@@ -1549,10 +1549,17 @@ COMPAT_SYSCALL_DEFINE3(set_mempolicy, int, mode, compat_ulong_t __user *, nmask,
 	alloc_size = ALIGN(nr_bits, BITS_PER_LONG) / 8;
 
 	if (nmask) {
+<<<<<<< HEAD
 		if (compat_get_bitmap(bm, nmask, nr_bits))
 			return -EFAULT;
 		nm = compat_alloc_user_space(alloc_size);
 		if (copy_to_user(nm, bm, alloc_size))
+=======
+		if(compat_get_bitmap(bm, nmask, nr_bits))
+			return -EFAULT;
+		nm = compat_alloc_user_space(alloc_size);
+		if(copy_to_user(nm, bm, alloc_size))
+>>>>>>> LA.UM.5.6.r1-06400-89xx.0
 			return -EFAULT;
 	}
 
