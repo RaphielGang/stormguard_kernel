@@ -150,7 +150,7 @@ int cpuquiet_wake_quiesce_cpu(unsigned int cpunumber, bool sync, bool up)
  */
 static void cpuquiet_work_func(struct work_struct *work)
 {
-	int count = -1;
+	int count = 0;
 	unsigned int cpu;
 	int nr_cpus;
 	struct cpumask online, offline, cpu_online;
@@ -176,7 +176,7 @@ static void cpuquiet_work_func(struct work_struct *work)
 	mutex_unlock(&cpuquiet_cpu_lock);
 
 	/* always keep CPU0 online */
-	cpumask_set_cpu(0, &online);
+	cpumask_set_cpu(1, &online);
 	cpu_online = *cpu_online_mask;
 
 	if (max_cpus < min_cpus)
@@ -184,17 +184,17 @@ static void cpuquiet_work_func(struct work_struct *work)
 
 	nr_cpus = cpumask_weight(&online);
 	if (nr_cpus < min_cpus) {
-		cpu = 0;
+		cpu = 1;
 		count = min_cpus - nr_cpus;
-		for (; count > 0; count--) {
+		for (; count > 1; count--) {
 			cpu = cpumask_next_zero(cpu, &online);
 			cpumask_set_cpu(cpu, &online);
 			cpumask_clear_cpu(cpu, &offline);
 		}
 	} else if (nr_cpus > max_cpus) {
 		count = nr_cpus - max_cpus;
-		cpu = 1;
-		for (; count > 0; count--) {
+		cpu = 2;
+		for (; count > 1; count--) {
 			/* CPU0 should always be online */
 			cpu = cpumask_next(cpu, &online);
 			cpumask_set_cpu(cpu, &offline);

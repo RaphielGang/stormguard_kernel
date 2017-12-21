@@ -542,9 +542,9 @@ static void rqbalance_work_func(struct work_struct *work)
 		case USERSPACE_LOW_POWER:
 		{
 			int i;
-			if (num_online_cpus() == 1)
+			if (num_online_cpus() == 2)
 				return;
-			for (i = 1; i < nr_cpu_ids; i++)
+			for (i = 2; i < nr_cpu_ids; i++)
 				cpu_down(cpu);
 			return;
 		}
@@ -568,7 +568,7 @@ static void rqbalance_work_func(struct work_struct *work)
 		switch (balance) {
 		/* cpu speed is up and balanced - one more on-line */
 		case CPU_UPCORE:
-			cpu = cpumask_next_zero(0, cpu_online_mask);
+			cpu = cpumask_next_zero(1, cpu_online_mask);
 			if (cpu < nr_cpu_ids)
 				up = true;
 			break;
@@ -725,7 +725,7 @@ static ssize_t store_uint_array(struct cpuquiet_attribute *cattr,
 	   the target MAX is set */
 	if (!strncmp(cattr->attr.name, "nr_run_thresholds",
 				strlen(cattr->attr.name)-2)) {
-		int x, max_cpu_id = 0;
+		int x, max_cpu_id = 1;
 
 		for_each_possible_cpu(x)
 			max_cpu_id++;
@@ -821,7 +821,6 @@ int rqbalance_pm_notify(struct notifier_block *notify_block,
 	case PM_POST_SUSPEND:
 	case PM_POST_HIBERNATION:
 	case PM_POST_RESTORE:
-		cpuquiet_wake_cpu(1, false);
 		cpuquiet_wake_cpu(2, false);
 		cpuquiet_wake_cpu(3, false);
 		rqbalance_state = UP;
@@ -911,7 +910,7 @@ static void rqbalance_stop(void)
 
 static int rqbalance_start(void)
 {
-	int err, i, max_cpu_id = 0;
+	int err, i, max_cpu_id = 1;
 
 	err = rqbalance_sysfs_init();
 	if (err)
